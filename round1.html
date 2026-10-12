@@ -54,7 +54,6 @@ body::before {
 h1 {
   text-align: center;
   margin: 30px 20px 10px;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
   font-weight: 800;
   font-size: clamp(1.8rem, 3.5vw, 2.6rem);
   letter-spacing: 0.02em;
@@ -172,14 +171,14 @@ h1 {
   transform: translateY(0) scale(0.95);
 }
 
-/* ====== GRID ====== */
+/* ====== GRID (8 колонок) ====== */
 .grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 14px;
   padding: 12px;
   justify-items: center;
-  max-width: 1040px;
+  max-width: 1180px;
   margin: 0 auto;
 }
 
@@ -192,9 +191,9 @@ h1 {
   text-align: center;
   font-weight: 700;
   border-radius: 50%;
-  font-size: 0.7rem;
+  font-size: 0.66rem;
   line-height: 1.15;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--text);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
@@ -236,13 +235,11 @@ h1 {
   z-index: 0;
 }
 
-/* FLAGS — своя иконка для каждого из 4 вопросов */
 .question.q1 { background-image: url("image/icon1.png"); }
 .question.q2 { background-image: url("image/icon2.png"); }
 .question.q3 { background-image: url("image/icon3.png"); }
 .question.q4 { background-image: url("image/icon4.png"); }
 
-/* dark overlay + gradient tint */
 .question::before {
   content: "";
   position: absolute;
@@ -255,7 +252,6 @@ h1 {
   transition: opacity 0.25s ease;
 }
 
-/* text above overlay */
 .question span {
   position: relative;
   z-index: 2;
@@ -270,11 +266,8 @@ h1 {
     0 0 30px rgba(124, 92, 255, 0.4);
 }
 
-.question:hover::before {
-  opacity: 0.85;
-}
+.question:hover::before { opacity: 0.85; }
 
-/* used */
 .question.used {
   background: rgba(30, 30, 45, 0.6) !important;
   cursor: not-allowed;
@@ -282,12 +275,8 @@ h1 {
   box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
   transform: none !important;
 }
-.question.used::before {
-  background: rgba(0, 0, 0, 0.72);
-}
-.question.used span {
-  opacity: 0.2;
-}
+.question.used::before { background: rgba(0, 0, 0, 0.72); }
+.question.used span { opacity: 0.2; }
 
 /* ====== POPUP ====== */
 .popup {
@@ -365,12 +354,17 @@ h1 {
   border-top: 1px solid rgba(255,255,255,0.1);
 }
 
+/* Картинка ответа — теперь заметная и не вылезает за экран */
 .answer img {
-  max-width: 65%;
+  display: block;
+  max-width: 80%;
+  max-height: 45vh;
+  width: auto;
   height: auto;
+  margin: 14px auto 0;
   border-radius: var(--radius-md);
-  margin-top: 10px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.12);
 }
 
 /* ====== BUTTONS (general) ====== */
@@ -396,9 +390,7 @@ button:hover {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 
-button:active {
-  transform: translateY(0) scale(0.98);
-}
+button:active { transform: translateY(0) scale(0.98); }
 
 #questionText blockquote,
 #answerText blockquote {
@@ -436,7 +428,7 @@ button:active {
   transform: translateY(-2px);
 }
 
-/* Close button — outlined style */
+/* Close button — outlined */
 .popup-content > button:last-child {
   margin-top: 20px;
   background: transparent;
@@ -453,31 +445,22 @@ button:active {
 /* ====== MUSIC BUTTON ====== */
 #playMusicBtn {
   background: linear-gradient(135deg, #9c27b0, #e91e63) !important;
-  display: none; /* shown only for music questions */
+  display: none;
   align-items: center;
   gap: 8px;
 }
-#playMusicBtn:hover {
-  box-shadow: 0 14px 32px rgba(233, 30, 99, 0.5) !important;
-}
-#playMusicBtn.playing {
-  background: linear-gradient(135deg, #e53935, #b71c1c) !important;
-}
+#playMusicBtn:hover { box-shadow: 0 14px 32px rgba(233, 30, 99, 0.5) !important; }
+#playMusicBtn.playing { background: linear-gradient(135deg, #e53935, #b71c1c) !important; }
 
 @keyframes pulse-note {
   0%   { transform: scale(1);   }
   50%  { transform: scale(1.3); }
   100% { transform: scale(1);   }
 }
-.note-icon {
-  display: inline-block;
-  font-size: 1.2em;
-}
-#playMusicBtn.playing .note-icon {
-  animation: pulse-note 0.6s infinite;
-}
+.note-icon { display: inline-block; font-size: 1.2em; }
+#playMusicBtn.playing .note-icon { animation: pulse-note 0.6s infinite; }
 
-/* ====== NEXT BUTTON (modern) ====== */
+/* ====== NEXT BUTTON ====== */
 .next-wrapper {
   display: flex;
   justify-content: center;
@@ -508,70 +491,39 @@ button:active {
   transition: transform 0.25s cubic-bezier(.2,.9,.3,1.2), box-shadow 0.25s ease;
 }
 
-.next-btn::after {
-  content: "→";
-  font-size: 1.2rem;
-  transition: transform 0.3s ease;
-}
-
+.next-btn::after { content: "→"; font-size: 1.2rem; transition: transform 0.3s ease; }
 .next-btn::before {
   content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
+  position: absolute; top: 0; left: -100%;
+  width: 100%; height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
   transition: left 0.6s ease;
 }
-
 .next-btn:hover {
   transform: translateY(-3px);
-  box-shadow:
-    0 20px 45px rgba(124, 92, 255, 0.65),
-    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  box-shadow: 0 20px 45px rgba(124, 92, 255, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
-
-.next-btn:hover::after {
-  transform: translateX(6px);
-}
-
-.next-btn:hover::before {
-  left: 100%;
-}
-
-.next-btn:active {
-  transform: translateY(-1px) scale(0.98);
-}
+.next-btn:hover::after { transform: translateX(6px); }
+.next-btn:hover::before { left: 100%; }
+.next-btn:active { transform: translateY(-1px) scale(0.98); }
 
 /* ====== RESPONSIVE ====== */
 @media (max-width: 1000px) {
   .grid {
     max-width: 100%;
     overflow-x: auto;
-    grid-template-columns: repeat(7, 100px);
+    grid-template-columns: repeat(8, 100px);
     justify-content: start;
   }
 }
 
 @media (max-width: 640px) {
-  .scoreboard {
-    gap: 14px;
-  }
-  .team {
-    min-width: 160px;
-    padding: 16px;
-  }
-  .score {
-    font-size: 2.2rem;
-  }
-  .next-btn {
-    padding: 14px 32px;
-    font-size: 0.95rem;
-  }
-  #questionText, #answerText {
-    font-size: 1.15rem;
-  }
+  .scoreboard { gap: 14px; }
+  .team { min-width: 160px; padding: 16px; }
+  .score { font-size: 2.2rem; }
+  .next-btn { padding: 14px 32px; font-size: 0.95rem; }
+  #questionText, #answerText { font-size: 1.15rem; }
+  .answer img { max-width: 100%; }
 }
 </style>
 </head>
@@ -609,7 +561,6 @@ button:active {
     <button onclick="startTimer()">Запустить таймер</button>
     <p id="questionText">Question text</p>
 
-    <!-- Action buttons row: Play Music + Show Answer -->
     <div class="action-buttons">
       <button id="playMusicBtn" onclick="toggleMusic()">
         <span class="note-icon">🎵</span> <span id="musicBtnLabel">Play Music</span>
@@ -617,9 +568,10 @@ button:active {
       <button onclick="showAnswer()">Показать ответ</button>
     </div>
 
+    <!-- Ответ + картинка (появляются вместе по клику) -->
     <div class="answer" id="answer">
       <p id="answerText">Answer text</p>
-      <img id="answerImage" src="" alt="">
+      <img id="answerImage" src="" alt="Изображение к ответу">
     </div>
     <button onclick="closePopup()">Закрыть</button>
   </div>
@@ -636,7 +588,7 @@ button:active {
 </div>
 
 <script>
-// ====== CATEGORIES (7) ======
+// ====== CATEGORIES (8) ======
 const categories = [
   "Английский язык",
   "История",
@@ -644,128 +596,154 @@ const categories = [
   "Обществознание",
   "География",
   "Биология",
+  "Молдавский язык",
   "Наследие Л.А.Тарасевича"
 ];
 
-// ====== QUESTIONS (7 наборов по 4 вопроса) ======
+// ====== QUESTIONS (8 наборов по 4 вопроса) ======
+// Для каждого вопроса поле image: "путь/к/картинке.jpg"
+// Если у вопроса нет image — картинка просто не отобразится.
 const questions = [
   // 1. Английский язык
   [
     {category:"Английский язык", number:1,
      question:"Who works in a hospital and treats patients?",
-     answer:"A Doctor"},
+     answer:"A Doctor",
+     image:"image/english/doctor.jpg"},
     {category:"Английский язык", number:2,
      question:"Who helps a doctor and takes care of patients?",
-     answer:"A Nurse"},
+     answer:"A Nurse",
+     image:"image/english/nurse.jpg"},
     {category:"Английский язык", number:3,
      question:"How much water should an adult drink daily?",
-     answer:"2 litres"},
+     answer:"2 litres",
+     image:"image/english/water.jpg"},
     {category:"Английский язык", number:4,
-     question:"How much time do the doctors advise to exercise every day? ",
-     answer:"30 minutes"}
+     question:"How much time do the doctors advise to exercise every day?",
+     answer:"30 minutes",
+     image:"image/english/exercise.jpg"}
   ],
 
   // 2. История
   [
     {category:"История", number:1,
-     question:" ",
-     answer:""},
+     question:"Он появился на свет 25 марта (6 апреля) 1836 года на хуторе Карантин, Тираспольского уезда, Херсонской губернии Российской империи. Название хутора — Карантин — напрямую связано с будущей профессией ученого. Там располагалась пограничная карантинная станция для проверки грузов и изоляции людей, прибывавших из зон распространения инфекций. Отец будущего хирурга служил письмоводителем в Дубоссарской карантинной конторе. Его именем назван Научно-исследовательский институт скорой помощи в г. Москва. Назовите имя и фамилию этого знаменитого человека.",
+     answer:"Николай Васильевич Склифосовский.",
+     image:"image/history/sklifosovsky.jpg"},
     {category:"История", number:2,
-     question:"",
-     answer:""},
+     question:"Процедура первой прививки от оспы состоялась в ночь на 12 (23) октября 1768 года в Царском Селе. Операция проводилась в строжайшей секретности. Императрица понимала огромный риск: если бы она умерла, английского врача Томаса Димсдейла, которого она выписала для проведения процедуры, растерзала бы толпа. Она даже заранее подготовила для него подорожную и почтовых лошадей для побега из страны на случай трагического исхода. С помощью ланцета на её руке сделали несколько надрезов, в которые ввели жидкость из созревших оспенных пузырьков на руке мальчика. Назовите имя императрицы.",
+     answer:"Екатерина Вторая.",
+     image:"image/history/catherine2.jpg"},
     {category:"История", number:3,
-     question:"",
-     answer:""},
+     question:"В 1895 году этот учёный открыл Х-лучи, положив начало новой эпохе в медицинской диагностике. Благодаря этому открытию врачи смогли исследовать внутренние органы и кости человека без хирургического вмешательства. Стал первым лауреатом Нобелевской премии по физике в 1901 году за открытие лучей, изменивших медицину. Назовите фамилию ученого.",
+     answer:"Вильгельм Рентген.",
+     image:"image/history/roentgen.jpg"},
     {category:"История", number:4,
-     question:"",
-     answer:""}
+     question:"Исследования этого человека в Калмыцких степях проходили в 1911 году в рамках масштабной международной экспедиции под руководством нобелевского лауреата Ильи Ильича Мечникова. Главной задачей было исследование механизмов распространения туберкулеза и особенностей иммунитета к нему среди коренного населения. Назовите имя учёного-микробиолога, который внёс значительный вклад в развитие вакцинопрофилактики в России.",
+     answer:"Лев Александрович Тарасевич",
+     image:"image/history/tarasevich.jpg"}
   ],
 
   // 3. Литература
   [
     {category:"Литература", number:1,
-     question:"Какой писатель-врач по образованию создал цикл «Записки юного врача», основанный на собственном опыте работы молодого доктора в сельской больнице? ",
-     answer:"Михаил Афанасьевич Булгаков"},
+     question:"Какой писатель-врач по образованию создал цикл «Записки юного врача», основанный на собственном опыте работы молодого доктора в сельской больнице?",
+     answer:"Михаил Афанасьевич Булгаков",
+     image:"image/literature/bulgakov.jpg"},
     {category:"Литература", number:2,
      question:"Какой известный русский писатель, врач и хирург написал автобиографическую повесть «Записки врача» и посвятил значительную часть творчества теме человеческого здоровья и врачебного долга?",
-     answer:"Викентий Викентьевич Вересаев"},
+     answer:"Викентий Викентьевич Вересаев",
+     image:"image/literature/veresaev.jpg"},
     {category:"Литература", number:3,
-     question:"Какой писатель по образованию был врачом и много лет паботал земским доктором, а свои медицинские наблюдения отразил в рассказах «Палата №6», «Случай из практики», «Ионыч» и др.",
-     answer:"Антон Павлович Чехов"},
+     question:"Какой писатель по образованию был врачом и много лет работал земским доктором, а свои медицинские наблюдения отразил в рассказах «Палата №6», «Случай из практики», «Ионыч» и др.",
+     answer:"Антон Павлович Чехов",
+     image:"image/literature/chekhov.jpg"},
     {category:"Литература", number:4,
-     question:"Как звали писателя, врача и общественного деятеля, автора произведения «Человек-амфибия», который по призванию был врачом? ",
-     answer:"Александр Романович Беляев"}
+     question:"Как звали писателя, врача и общественного деятеля, автора произведения «Человек-амфибия», который по призванию был врачом?",
+     answer:"Александр Романович Беляев",
+     image:"image/literature/belyaev.jpg"}
   ],
 
   // 4. Обществознание
   [
-    {category:"Обществознание", number:1,
-     question:"",
-     answer:""},
-    {category:"Обществознание", number:2,
-     question:"",
-     answer:""},
-    {category:"Обществознание", number:3,
-     question:"",
-     answer:""},
-    {category:"Обществознание", number:4,
-     question:"",
-     answer:""}
+    {category:"Обществознание", number:1, question:"", answer:"", image:"image/social/q1.jpg"},
+    {category:"Обществознание", number:2, question:"", answer:"", image:"image/social/q2.jpg"},
+    {category:"Обществознание", number:3, question:"", answer:"", image:"image/social/q3.jpg"},
+    {category:"Обществознание", number:4, question:"", answer:"", image:"image/social/q4.jpg"}
   ],
 
   // 5. География
   [
     {category:"География", number:1,
      question:"В каком городе находится штаб-квартира Всемирной организации здравоохранения (ВОЗ)?",
-     answer:"Женева (Швейцария)"},
+     answer:"Женева (Швейцария)",
+     image:"image/geography/geneva.jpg"},
     {category:"География", number:2,
      question:"Какое море, расположенное между Израилем и Иорданией, известно своими лечебными грязями и солью?",
-     answer:"Мёртвое море."},
+     answer:"Мёртвое море.",
+     image:"image/geography/dead_sea.jpg"},
     {category:"География", number:3,
      question:"В какой стране зародилась йога, которую используют для оздоровления?",
-     answer:"Индия"},
+     answer:"Индия",
+     image:"image/geography/india.jpg"},
     {category:"География", number:4,
      question:"Какая страна славится одной из самых высоких продолжительностей жизни благодаря медицине и здоровому образу жизни?",
-     answer:"Япония"}
+     answer:"Япония",
+     image:"image/geography/japan.jpg"}
   ],
 
   // 6. Биология
   [
     {category:"Биология", number:1,
      question:"Как называется органоид клетки, который часто называют «энергетической станцией» клетки, поскольку именно в нём происходит основная часть синтеза АТФ?",
-     answer:"Митохондрия"},
+     answer:"Митохондрия",
+     image:"image/biology/mitochondria.jpg"},
     {category:"Биология", number:2,
      question:"У какого организма впервые в истории биологии была доказана передача наследственных признаков с помощью классических опытов? Назовите организм.",
-     answer:"горох посевной (Pisum sativum), объект опытов Грегора Менделя."},
+     answer:"горох посевной (Pisum sativum), объект опытов Грегора Менделя.",
+     image:"image/biology/pea.jpg"},
     {category:"Биология", number:3,
      question:"Как называется процесс образования двух генетически практически идентичных дочерних клеток из одной материнской?",
-     answer:"митоз"},
+     answer:"митоз",
+     image:"image/biology/mitosis.jpg"},
     {category:"Биология", number:4,
      question:"Почему вирусы не относят к клеточным формам жизни?",
-     answer:"у вирусов нет клеточного строения и собственного полноценного обмена веществ; для размножения они используют клетки хозяина."}
+     answer:"у вирусов нет клеточного строения и собственного полноценного обмена веществ; для размножения они используют клетки хозяина.",
+     image:"image/biology/virus.jpg"}
   ],
 
-  // 7. История колледжа
+  // 7. Молдавский язык
+  [
+    {category:"Молдавский язык", number:1, question:"", answer:"", image:"image/moldovan/q1.jpg"},
+    {category:"Молдавский язык", number:2, question:"", answer:"", image:"image/moldovan/q2.jpg"},
+    {category:"Молдавский язык", number:3, question:"", answer:"", image:"image/moldovan/q3.jpg"},
+    {category:"Молдавский язык", number:4, question:"", answer:"", image:"image/moldovan/q4.jpg"}
+  ],
+
+  // 8. Наследие Л.А.Тарасевича
   [
     {category:"Наследие Л.А.Тарасевича", number:1,
-     question:": Когда и где родился Л. А. Тарасевич?",
-     answer:"2 (15) февраля 1868 года в Тирасполе"},
+     question:"Когда и где родился Л. А. Тарасевич?",
+     answer:"2 (15) февраля 1868 года в Тирасполе",
+     image:"image/tarasevich/birthplace.jpg"},
     {category:"Наследие Л.А.Тарасевича", number:2,
-     question:"Что повлияло на решение Льва Тарасевича посвятить жизнь медицине?",
-     answer:"Смерть от скоротечной чахотки его любимой сестры Юлии в 1889 году"},
-    {category:"Наследие Л.А.Тарасевича", number:3,
      question:"В какой экспедиции и под чьим руководством участвовал Л. А. Тарасевич в 1911 году?",
-     answer:"В экспедиции Пастеровского института по изучению туберкулёза в калмыцких степях под руководством И. И. Мечникова"},
-    {category:"Наследие Л.А.Тарасевича", number:4,
+     answer:"В экспедиции Пастеровского института по изучению туберкулёза в калмыцких степях под руководством И. И. Мечникова.",
+     image:"image/tarasevich/expedition.jpg"},
+    {category:"Наследие Л.А.Тарасевича", number:3,
      question:"Какую роль играл Л. А. Тарасевич во время Первой мировой войны в противоэпидемической работе?",
-     answer:"Возглавлял врачей эпидемиологов, работал в Земском Союзе (руководил санитарным отделом), организовывал противоэпидемическую борьбу на фронтах, продвигал прививки против брюшного тифа и холеры"}
+     answer:"Возглавлял врачей эпидемиологов, работал в Земском Союзе (руководил санитарным отделом), организовывал противоэпидемическую борьбу на фронтах, продвигал прививки против брюшного тифа и холеры.",
+     image:"image/tarasevich/ww1.jpg"},
+    {category:"Наследие Л.А.Тарасевича", number:4,
+     question:"В каком году Тираспольскому медицинскому училищу присвоили имя Л. А. Тарасевича, и к какому событию то было приурочено?",
+     answer:"В 1968 году, к 100-летию со дня рождения учёного; на здании установили мемориальную доску, на открытии присутствовал сын Тарасевича Кирилл.",
+     image:"image/tarasevich/college.jpg"}
   ]
 ];
 
 // ====== BUILD GRID ======
 const grid = document.getElementById("grid");
 
-// Category headers (по 1 в каждой колонке)
 categories.forEach(cat => {
   const c = document.createElement("div");
   c.className = "category";
@@ -779,19 +757,18 @@ const team2Name = localStorage.getItem("team2Name") || "Team 2";
 document.getElementById("team1Name").textContent = team1Name;
 document.getElementById("team2Name").textContent = team2Name;
 
-// Question cells: 4 строки × 7 категорий.
-// Каждой строке (вопросу 1..4) — свой класс q1..q4 со своей иконкой.
+// Question cells: 4 строки × 8 категорий
 for (let i = 0; i < 4; i++) {
   categories.forEach((cat, ci) => {
     const q = document.createElement("div");
-    q.className = "question q" + (i + 1);   // q1, q2, q3, q4
+    q.className = "question q" + (i + 1);
     q.innerHTML = `<span>${i + 1}</span>`;
     q.onclick = () => openQuestion(q, questions[ci][i]);
     grid.appendChild(q);
   });
 }
 
-// ====== SCORE (persisted in localStorage) ======
+// ====== SCORE ======
 let score1 = Number(localStorage.getItem("score1")) || 0;
 let score2 = Number(localStorage.getItem("score2")) || 0;
 document.getElementById("score1").textContent = score1;
@@ -856,13 +833,16 @@ function openQuestion(el, data) {
   document.getElementById("questionText").innerHTML = data.question;
   document.getElementById("answerText").innerHTML = data.answer;
 
-  // Картинка ответа — необязательна
+  // Картинка ответа — задаём сразу, но она спрятана внутри .answer
   const img = document.getElementById("answerImage");
   if (data.image) {
     img.src = data.image;
     img.style.display = "block";
+    // Если картинка не загрузилась — прячем, чтобы не было "сломанной" иконки
+    img.onerror = () => { img.style.display = "none"; };
+    img.onload  = () => { img.style.display = "block"; };
   } else {
-    img.src = "";
+    img.removeAttribute("src");
     img.style.display = "none";
   }
 
@@ -870,7 +850,6 @@ function openQuestion(el, data) {
   document.getElementById("timer").textContent = "45";
   timeLeft = 45;
 
-  // Music button: только если у вопроса есть аудио
   const playBtn = document.getElementById("playMusicBtn");
   if (data.audio) {
     musicPlayer.src = data.audio;
