@@ -171,14 +171,14 @@ h1 {
   transform: translateY(0) scale(0.95);
 }
 
-/* ====== GRID (8 колонок) ====== */
+/* ====== GRID (9 колонок) ====== */
 .grid {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 14px;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 12px;
   padding: 12px;
   justify-items: center;
-  max-width: 1180px;
+  max-width: 1320px;
   margin: 0 auto;
 }
 
@@ -191,7 +191,7 @@ h1 {
   text-align: center;
   font-weight: 700;
   border-radius: 50%;
-  font-size: 0.66rem;
+  font-size: 0.62rem;
   line-height: 1.15;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -354,7 +354,6 @@ h1 {
   border-top: 1px solid rgba(255,255,255,0.1);
 }
 
-/* Картинка ответа — теперь заметная и не вылезает за экран */
 .answer img {
   display: block;
   max-width: 80%;
@@ -508,11 +507,11 @@ button:active { transform: translateY(0) scale(0.98); }
 .next-btn:active { transform: translateY(-1px) scale(0.98); }
 
 /* ====== RESPONSIVE ====== */
-@media (max-width: 1000px) {
+@media (max-width: 1200px) {
   .grid {
     max-width: 100%;
     overflow-x: auto;
-    grid-template-columns: repeat(8, 100px);
+    grid-template-columns: repeat(9, 96px);
     justify-content: start;
   }
 }
@@ -588,7 +587,7 @@ button:active { transform: translateY(0) scale(0.98); }
 </div>
 
 <script>
-// ====== CATEGORIES (8) ======
+// ====== CATEGORIES (9) ======
 const categories = [
   "Английский язык",
   "История",
@@ -596,11 +595,12 @@ const categories = [
   "Обществознание",
   "География",
   "Биология",
+  "Химия",
   "Молдавский язык",
   "Наследие Л.А.Тарасевича"
 ];
 
-// ====== QUESTIONS (8 наборов по 4 вопроса) ======
+// ====== QUESTIONS (9 наборов по 4 вопроса) ======
 // Для каждого вопроса поле image: "путь/к/картинке.jpg"
 // Если у вопроса нет image — картинка просто не отобразится.
 const questions = [
@@ -712,7 +712,27 @@ const questions = [
      image:"image/biology/virus.jpg"}
   ],
 
-  // 7. Молдавский язык
+  // 7. Химия
+  [
+    {category:"Химия", number:1,
+     question:"Какую роль играет железо в организме человека и с каким химическим веществом оно связано?",
+     answer:"Железо входит в состав гемоглобина — белка эритроцитов, который переносит кислород от лёгких к тканям. Недостаток железа может привести к железодефицитной анемии.",
+     image:"image/chemistry/ferrum.jpg"},
+    {category:"Химия", number:2,
+     question:"Какую роль играет кальций в организме человека?",
+     answer:"Кальций необходим для формирования костей и зубов, сокращения мышц, передачи нервных импульсов и свёртывания крови. Его соединения используют при производстве некоторых лекарственных препаратов.",
+     image:"image/chemistry/calcium.jpg"},
+    {category:"Химия", number:3,
+     question:"Какую функцию выполняет йод в организме человека?",
+     answer:"Йод необходим для синтеза гормонов щитовидной железы, которые регулируют обмен веществ, рост и развитие организма. Недостаток йода может нарушать работу щитовидной железы.",
+     image:"image/chemistry/iodine.jpg"},
+    {category:"Химия", number:4,
+     question:"Почему концентрация лекарственного вещества имеет большое значение?",
+     answer:"Концентрация определяет количество действующего вещества в определённом объёме или массе препарата. Слишком низкая концентрация может оказаться недостаточно эффективной, а слишком высокая — вызвать токсическое действие.",
+     image:"image/chemistry/concentration.jpg"}
+  ],
+
+  // 8. Молдавский язык
   [
     {category:"Молдавский язык", number:1, question:"Ку че компарау еӂиптений античь картя?", answer:"Ку ун медикамент", image:"image/moldovan/q1.jpg"},
     {category:"Молдавский язык", number:2, question:"Че калитэць требуе сэ айбэ ун медик адевэрат? ", answer:"Бунэтате, кураж, рэбдаре, грижэ фацэ де оамень, девотамент", image:"image/moldovan/q2.jpg"},
@@ -720,7 +740,7 @@ const questions = [
     {category:"Молдавский язык", number:4, question:"Че медик- кирург ренумит, ориӂинар дин орашул Дубэсарь, а контрибуит ла дезволтаря асепсией ши антисепсией ын кирурӂие? ", answer:"Н.В. Склифосовски", image:"image/moldovan/q4.jpg"}
   ],
 
-  // 8. Наследие Л.А.Тарасевича
+  // 9. Наследие Л.А.Тарасевича
   [
     {category:"Наследие Л.А.Тарасевича", number:1,
      question:"Когда и где родился Л. А. Тарасевич?",
@@ -757,7 +777,7 @@ const team2Name = localStorage.getItem("team2Name") || "Team 2";
 document.getElementById("team1Name").textContent = team1Name;
 document.getElementById("team2Name").textContent = team2Name;
 
-// Question cells: 4 строки × 8 категорий
+// Question cells: 4 строки × 9 категорий
 for (let i = 0; i < 4; i++) {
   categories.forEach((cat, ci) => {
     const q = document.createElement("div");
