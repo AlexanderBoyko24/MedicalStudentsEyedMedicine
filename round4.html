@@ -166,6 +166,85 @@ h1 {
   color: var(--text-dim);
 }
 
+/* ====== QR CODE SECTION ====== */
+.qr-section {
+  display: flex;
+  justify-content: center;
+  padding: 0 20px;
+  margin: 0 auto 40px;
+}
+
+.qr-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 26px 30px 22px;
+  border-radius: var(--radius-lg);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--glass-shadow);
+  text-align: center;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.qr-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(124, 92, 255, 0.5);
+  box-shadow: 0 14px 50px rgba(124, 92, 255, 0.3);
+}
+
+.qr-frame {
+  width: 240px;
+  height: 240px;
+  padding: 14px;
+  background: #fff;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,92,255,0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.qr-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.qr-fallback {
+  display: none;
+  color: #4a4a5a;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 1rem;
+}
+
+.qr-frame.qr-empty {
+  background: repeating-linear-gradient(45deg, #f5f5f8, #f5f5f8 12px, #ebebf0 12px, #ebebf0 24px);
+}
+.qr-frame.qr-empty .qr-fallback { display: block; }
+
+.qr-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+.qr-hint {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  max-width: 320px;
+  line-height: 1.45;
+}
+
 /* ====== REFLECTION BLOCK ====== */
 .reflection {
   max-width: 900px;
@@ -186,16 +265,17 @@ h1 {
 
 .card h2 {
   margin: 0 0 16px;
-  font-size: 1.2rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
   color: #fff;
   display: flex;
-  align-items: center;
-  gap: 10px;
+  align-items: flex-start;
+  gap: 12px;
+  line-height: 1.4;
 }
 
 .card h2 .num {
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -211,7 +291,7 @@ h1 {
 
 .card p.question {
   margin: 0 0 12px;
-  font-size: 1.05rem;
+  font-size: 1.02rem;
   line-height: 1.55;
   color: var(--text);
 }
@@ -231,6 +311,8 @@ textarea {
   transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
 }
 
+textarea.compact { min-height: 70px; }
+
 textarea::placeholder {
   color: rgba(245, 246, 255, 0.35);
 }
@@ -240,6 +322,60 @@ textarea:focus {
   border-color: rgba(124, 92, 255, 0.6);
   background: rgba(0, 0, 0, 0.4);
   box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.18);
+}
+
+/* ====== RATING WIDGET ====== */
+.rating-block {
+  margin: 6px 0 14px;
+}
+
+.rating {
+  display: flex;
+  gap: 10px;
+  margin: 0 0 8px;
+  flex-wrap: wrap;
+}
+
+.rating button {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  transition: transform 0.15s ease, background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.rating button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(124, 92, 255, 0.55);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.rating button.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-color: transparent;
+  box-shadow: 0 10px 26px rgba(124, 92, 255, 0.55);
+  transform: translateY(-2px) scale(1.05);
+}
+
+.rating-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  max-width: 270px;
 }
 
 /* ====== ACTIONS ====== */
@@ -317,35 +453,19 @@ textarea:focus {
   transition: left 0.6s ease;
 }
 
-.action-btn:hover {
-  transform: translateY(-3px);
-}
+.action-btn:hover { transform: translateY(-3px); }
 
 .action-btn.primary:hover {
-  box-shadow:
-    0 20px 45px rgba(124, 92, 255, 0.65),
-    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  box-shadow: 0 20px 45px rgba(124, 92, 255, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
-
 .action-btn.danger:hover {
-  box-shadow:
-    0 20px 45px rgba(239, 68, 68, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  box-shadow: 0 20px 45px rgba(239, 68, 68, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
-
 .action-btn.success:hover {
-  box-shadow:
-    0 20px 45px rgba(34, 197, 94, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  box-shadow: 0 20px 45px rgba(34, 197, 94, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
-
-.action-btn:hover::before {
-  left: 100%;
-}
-
-.action-btn:active {
-  transform: translateY(-1px) scale(0.98);
-}
+.action-btn:hover::before { left: 100%; }
+.action-btn:active { transform: translateY(-1px) scale(0.98); }
 
 /* ====== FINAL MESSAGE ====== */
 .final-message {
@@ -405,10 +525,7 @@ textarea:focus {
   z-index: 200;
 }
 
-.toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* ====== RESPONSIVE ====== */
 @media (max-width: 640px) {
@@ -416,14 +533,16 @@ textarea:focus {
   .team-card { min-width: 160px; padding: 18px; }
   .score { font-size: 2.4rem; }
 
-  .card { padding: 22px 18px; }
-  .card h2 { font-size: 1.05rem; }
-  .card p.question { font-size: 1rem; }
+  .qr-frame { width: 200px; height: 200px; }
+  .qr-card { padding: 20px; }
 
-  .action-btn {
-    padding: 13px 26px;
-    font-size: 0.9rem;
-  }
+  .card { padding: 22px 18px; }
+  .card h2 { font-size: 1rem; }
+  .card p.question { font-size: 0.98rem; }
+
+  .rating button { width: 42px; height: 42px; font-size: 1rem; }
+
+  .action-btn { padding: 13px 26px; font-size: 0.9rem; }
 }
 </style>
 </head>
@@ -446,34 +565,21 @@ textarea:focus {
   </div>
 </div>
 
-<!-- ====== ВОПРОСЫ ДЛЯ ОБСУЖДЕНИЯ ====== -->
-<div class="reflection">
-
-  <div class="card">
-    <h2><span class="num">1</span> Что понравилось больше всего?</h2>
-    <p class="question">Какой раунд или какое утверждение оказалось самым интересным и почему?</p>
-    <textarea id="reflect1" placeholder="Поделитесь впечатлениями…"></textarea>
+<!-- ====== QR-КОД (место под QR) ====== -->
+<div class="qr-section">
+  <div class="qr-card">
+    <div class="qr-frame" id="qrFrame">
+      <img id="qrImage" src="image/qr.png" alt="QR-код"
+           onerror="this.remove(); document.getElementById('qrFrame').classList.add('qr-empty');">
+      <span class="qr-fallback">QR-код</span>
+    </div>
+    <div class="qr-title">📱 Наведите камеру телефона</div>
+    <div class="qr-hint">Отсканируйте QR-код, чтобы пройти онлайн-опрос или посмотреть материалы</div>
   </div>
-
-  <div class="card">
-    <h2><span class="num">2</span> Что оказалось сложным?</h2>
-    <p class="question">Какие вопросы вызвали затруднения? Что помогло найти ответ?</p>
-    <textarea id="reflect2" placeholder="Запишите свои мысли…"></textarea>
-  </div>
-
-  <div class="card">
-    <h2><span class="num">3</span> Что нового вы узнали?</h2>
-    <p class="question">Какие факты о медицине, науке или культуре запомнились особенно сильно?</p>
-    <textarea id="reflect3" placeholder="Расскажите о самом ярком открытии…"></textarea>
-  </div>
-
-  <div class="card">
-    <h2><span class="num">4</span> Командная работа</h2>
-    <p class="question">Как вы оцениваете работу в команде? Что можно улучшить в следующий раз?</p>
-    <textarea id="reflect4" placeholder="Что помогло вам как команде…"></textarea>
-  </div>
-
 </div>
+
+<!-- ====== ВОПРОСЫ ДЛЯ ОБСУЖДЕНИЯ ====== -->
+<div class="reflection" id="reflection"></div>
 
 <!-- ====== ДЕЙСТВИЯ ====== -->
 <div class="actions">
@@ -515,16 +621,133 @@ if (score1 > score2) {
   document.getElementById("card2").classList.add("winner");
 }
 
-// ====== ВОССТАНОВЛЕНИЕ ЗАМЕТОК ======
-["reflect1", "reflect2", "reflect3", "reflect4"].forEach(id => {
-  const saved = localStorage.getItem(id);
-  if (saved) document.getElementById(id).value = saved;
+// ====== СПИСОК ВОПРОСОВ РЕФЛЕКСИИ ======
+// type: "rating" — оценка 1..5 + необязательный комментарий
+// type: "text"   — текстовый ответ
+const reflectData = [
+  { id: 1, type: "rating",
+    title: "Насколько вам понравилось мероприятие в целом?",
+    leftLabel: "Совсем нет", rightLabel: "Очень понравилось",
+    placeholder: "Комментарий (по желанию)…" },
+
+  { id: 2, type: "rating",
+    title: "Насколько интересным для вас был формат игры?",
+    leftLabel: "Не интересно", rightLabel: "Очень интересно",
+    placeholder: "Комментарий (по желанию)…" },
+
+  { id: 3, type: "text",
+    title: "Какой раунд вам понравился больше всего?",
+    question: "Опишите, какой раунд запомнился и почему.",
+    placeholder: "Например: раунд «Факт или миф»…" },
+
+  { id: 4, type: "rating",
+    title: "Насколько сложными для вас были вопросы?",
+    leftLabel: "Очень легко", rightLabel: "Очень сложно",
+    placeholder: "Комментарий (по желанию)…" },
+
+  { id: 5, type: "text",
+    title: "Помогла ли игра увидеть связь между общеобразовательными дисциплинами и медициной?",
+    question: "Приведите примеры такой связи.",
+    placeholder: "Например: биология ↔ анатомия, химия ↔ фармакология…" },
+
+  { id: 6, type: "text",
+    title: "Узнали ли вы сегодня что-то новое или интересное?",
+    question: "Что именно запомнилось больше всего?",
+    placeholder: "Запишите факт или мысль, которая удивила…" },
+
+  { id: 7, type: "rating",
+    title: "Насколько активно вы участвовали в игре?",
+    leftLabel: "Почти не участвовал", rightLabel: "Очень активно",
+    placeholder: "Комментарий (по желанию)…" },
+
+  { id: 8, type: "rating",
+    title: "Как вы оцениваете организацию мероприятия?",
+    leftLabel: "Плохо", rightLabel: "Отлично",
+    placeholder: "Комментарий (по желанию)…" },
+
+  { id: 9, type: "text",
+    title: "Хотели бы вы принять участие в подобных интеллектуальных играх в будущем?",
+    question: "Да / Нет / Почему?",
+    placeholder: "Ваш ответ…" },
+
+  { id: 10, type: "text",
+    title: "Что бы вы хотели изменить или добавить в подобные мероприятия?",
+    question: "Ваши предложения и идеи.",
+    placeholder: "Например: больше раундов, другие темы…" },
+
+  { id: 11, type: "text",
+    title: "Какую тему для следующей интеллектуальной игры вы предложили бы?",
+    question: "Ваш вариант темы.",
+    placeholder: "Например: «Медицина в искусстве»…" }
+];
+
+// ====== ГЕНЕРАЦИЯ КАРТОЧЕК ======
+const reflectionEl = document.getElementById("reflection");
+
+reflectData.forEach(item => {
+  const card = document.createElement("div");
+  card.className = "card";
+
+  const ratingHTML = item.type === "rating" ? `
+    <div class="rating-block">
+      <div class="rating" data-qid="${item.id}">
+        ${[1,2,3,4,5].map(v =>
+          `<button type="button" data-value="${v}">${v}</button>`
+        ).join("")}
+      </div>
+      <div class="rating-label">
+        <span>${item.leftLabel || "Низко"}</span>
+        <span>${item.rightLabel || "Высоко"}</span>
+      </div>
+    </div>
+  ` : "";
+
+  const questionHTML = item.question
+    ? `<p class="question">${item.question}</p>`
+    : "";
+
+  card.innerHTML = `
+    <h2><span class="num">${item.id}</span> ${item.title}</h2>
+    ${questionHTML}
+    ${ratingHTML}
+    <textarea id="reflect${item.id}"
+              class="${item.type === "rating" ? "compact" : ""}"
+              placeholder="${item.placeholder || "Ваш ответ…"}"></textarea>
+  `;
+
+  reflectionEl.appendChild(card);
+});
+
+// ====== ВОССТАНОВЛЕНИЕ СОХРАНЁННЫХ ОТВЕТОВ ======
+reflectData.forEach(item => {
+  // текстовое поле
+  const ta = document.getElementById("reflect" + item.id);
+  const savedText = localStorage.getItem("reflect" + item.id);
+  if (savedText) ta.value = savedText;
+
+  // рейтинг
+  if (item.type === "rating") {
+    const ratingEl = reflectionEl.querySelector(`.rating[data-qid="${item.id}"]`);
+    const savedRating = localStorage.getItem("rating" + item.id);
+    if (savedRating) {
+      const btn = ratingEl.querySelector(`button[data-value="${savedRating}"]`);
+      if (btn) btn.classList.add("active");
+    }
+    // клики по кнопкам рейтинга
+    ratingEl.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        ratingEl.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        localStorage.setItem("rating" + item.id, btn.dataset.value);
+      });
+    });
+  }
 });
 
 // ====== СОХРАНЕНИЕ ЗАМЕТОК ======
 function saveReflection(e) {
-  ["reflect1", "reflect2", "reflect3", "reflect4"].forEach(id => {
-    localStorage.setItem(id, document.getElementById(id).value);
+  reflectData.forEach(item => {
+    localStorage.setItem("reflect" + item.id, document.getElementById("reflect" + item.id).value);
   });
 
   const btn = e.currentTarget;
@@ -541,16 +764,32 @@ function saveReflection(e) {
 
 // ====== СКАЧИВАНИЕ ЗАМЕТОК В ФАЙЛ ======
 function downloadNotes() {
-  // На всякий случай сохраним текущее содержимое полей в localStorage
-  ["reflect1", "reflect2", "reflect3", "reflect4"].forEach(id => {
-    localStorage.setItem(id, document.getElementById(id).value);
+  // сохраняем актуальное содержимое текстовых полей
+  reflectData.forEach(item => {
+    localStorage.setItem("reflect" + item.id, document.getElementById("reflect" + item.id).value);
   });
 
-  // Соберём красивый текстовый отчёт
   const winnerText =
     score1 > score2 ? `🏆 Победитель: ${team1Name}` :
     score2 > score1 ? `🏆 Победитель: ${team2Name}` :
                       "🤝 Ничья";
+
+  let body = "";
+
+  reflectData.forEach(item => {
+    const header = `${item.id}. ${item.title}`;
+    body += `\n${header}\n${"-".repeat(Math.min(header.length, 60))}\n`;
+
+    if (item.type === "rating") {
+      const r = localStorage.getItem("rating" + item.id);
+      body += `   Оценка: ${r ? r + " / 5" : "(не выбрано)"}\n`;
+      const c = localStorage.getItem("reflect" + item.id);
+      if (c && c.trim()) body += `   Комментарий: ${c}\n`;
+    } else {
+      const a = localStorage.getItem("reflect" + item.id);
+      body += `   ${a && a.trim() ? a : "(не заполнено)"}\n`;
+    }
+  });
 
   const text =
 `РЕФЛЕКСИЯ ПО ИГРЕ
@@ -565,40 +804,22 @@ ${winnerText}
 
 ВОПРОСЫ ДЛЯ РЕФЛЕКСИИ
 ============================================
-
-1. Что понравилось больше всего?
---------------------------------------------
-${localStorage.getItem("reflect1") || "(не заполнено)"}
-
-2. Что оказалось сложным?
---------------------------------------------
-${localStorage.getItem("reflect2") || "(не заполнено)"}
-
-3. Что нового вы узнали?
---------------------------------------------
-${localStorage.getItem("reflect3") || "(не заполнено)"}
-
-4. Командная работа
---------------------------------------------
-${localStorage.getItem("reflect4") || "(не заполнено)"}
-
+${body}
 ============================================
 Конец отчёта
 `;
 
-  // Создаём файл и запускаем скачивание
   const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
   const url = URL.createObjectURL(blob);
 
   const a = document.createElement("a");
-  const dateStr = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  const dateStr = new Date().toISOString().slice(0, 10);
   a.href = url;
   a.download = `reflection_${dateStr}.txt`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
 
-  // Освобождаем память
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 
   showToast("📥 Файл скачан");
@@ -607,12 +828,14 @@ ${localStorage.getItem("reflect4") || "(не заполнено)"}
 // ====== НАЧАТЬ ЗАНОВО ======
 function restartGame() {
   if (!confirm("Сбросить очки и начать игру с самого начала?")) return;
+
   localStorage.removeItem("score1");
   localStorage.removeItem("score2");
-  localStorage.removeItem("reflect1");
-  localStorage.removeItem("reflect2");
-  localStorage.removeItem("reflect3");
-  localStorage.removeItem("reflect4");
+  reflectData.forEach(item => {
+    localStorage.removeItem("reflect" + item.id);
+    localStorage.removeItem("rating" + item.id);
+  });
+
   // Поменяй имя файла на свою первую страницу, если она называется иначе
   window.location.href = "index.html";
 }
@@ -621,6 +844,7 @@ function restartGame() {
 function finishGame() {
   document.querySelector(".actions").style.display = "none";
   document.querySelector(".reflection").style.display = "none";
+  document.querySelector(".qr-section").style.display = "none";
   document.querySelector(".teams").style.display = "none";
   document.getElementById("finalMessage").classList.add("show");
 }
