@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jeopardy Round 2 — Fact or Fiction</title>
+<style>
+/* ====== RESET & BASE ====== */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+:root {
+  --accent: #7c5cff;
+  --accent-2: #22d3ee;
+  --accent-glow: rgba(124, 92, 255, 0.55);
+  --success: #22c55e;
+  --success-2: #4ade80;
+  --danger: #ef4444;
+  --danger-2: #f87171;
+  --glass-bg: rgba(20, 20, 35, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+  --text: #f5f6ff;
+  --text-dim: rgba(245, 246, 255, 0.65);
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+}
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text);
+  background-image: url('image/1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(124, 92, 255, 0.35), transparent 55%),
+    radial-gradient(circle at 85% 90%, rgba(34, 211, 238, 0.28), transparent 55%),
+    linear-gradient(180deg, rgba(5, 5, 15, 0.75), rgba(5, 5, 15, 0.85));
+  z-index: -1;
+}
+
+/* ====== TITLE ====== */
+h1 {
+  text-align: center;
+  margin: 30px 20px 10px;
+  font-weight: 800;
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  letter-spacing: 0.02em;
+  background: linear-gradient(135deg, #ffffff 0%, #c9c6ff 55%, #9edaff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 4px 30px rgba(124, 92, 255, 0.35);
+}
+
+/* ====== SCOREBOARD ====== */
+.teams {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 24px auto 36px;
+  padding: 0 16px;
+  flex-wrap: wrap;
+}
+
+.team {
+  position: relative;
+  min-width: 240px;
+  padding: 22px 24px 18px;
+  border-radius: var(--radius-lg);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--glass-shadow);
+  text-align: center;
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(124, 92, 255, 0.6), rgba(34, 211, 238, 0.35), transparent 70%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.team:hover {
+  transform: translateY(-3px);
+  border-color: rgba(124, 92, 255, 0.4);
+  box-shadow: 0 14px 50px rgba(124, 92, 255, 0.28);
+}
+
+.team-name {
+  margin: 0 0 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.score {
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 1;
+  margin: 8px 0 18px;
+  background: linear-gradient(135deg, #ffffff, #b7b0ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-variant-numeric: tabular-nums;
+  transition: transform 0.25s ease;
+}
+
+.score.bump {
+  transform: scale(1.12);
+}
+
+.score-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.score-controls button {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.score-controls button:hover {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-color: transparent;
+  box-shadow: 0 8px 20px rgba(124, 92, 255, 0.45);
+  transform: translateY(-2px);
+}
+
+.score-controls button:active {
+  transform: translateY(0) scale(0.95);
+}
+
+/* ====== GRID (6 колонок) ====== */
+.list {
+  max-width: 1240px;
+  margin: 0 auto 40px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 18px;
+  padding: 16px;
+  justify-items: center;
+}
+
+/* ====== STATEMENT CARD — КРУГЛАЯ ====== */
+.statement {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(.2,.9,.3,1.2), box-shadow 0.25s ease, border-color 0.25s ease;
+  z-index: 0;
+}
+
+/* чередование фонов */
+.list .statement:nth-child(odd)  { background-image: url("image/icon4.png"); }
+.list .statement:nth-child(even) { background-image: url("image/icon5.png"); }
+
+/* dark overlay + gradient tint */
+.statement::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.3), rgba(0,0,0,0.68)),
+    radial-gradient(circle at 30% 20%, rgba(124,92,255,0.28), transparent 60%);
+  border-radius: 50%;
+  z-index: 1;
+  transition: opacity 0.25s ease;
+}
+
+.statement span {
+  position: relative;
+  z-index: 2;
+}
+
+.statement:hover {
+  transform: translateY(-6px) scale(1.05);
+  border-color: rgba(124, 92, 255, 0.65);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(124, 92, 255, 0.35),
+    0 0 30px rgba(124, 92, 255, 0.4);
+}
+
+.statement:hover::before {
+  opacity: 0.85;
+}
+
+/* использованный */
+.statement.used {
+  background: rgba(30, 30, 45, 0.6) !important;
+  cursor: not-allowed;
+  border-color: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
+  transform: none !important;
+}
+.statement.used::before {
+  background: rgba(0, 0, 0, 0.72);
+}
+.statement.used span {
+  opacity: 0.25;
+}
+
+/* ====== POPUP ====== */
+.popup {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 5, 15, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  padding: 20px;
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.popup-content {
+  position: relative;
+  background: rgba(18, 18, 32, 0.92);
+  border: 1px solid var(--glass-border);
+  padding: 32px 30px;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: var(--radius-lg);
+  text-align: center;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(124, 92, 255, 0.25);
+  animation: popIn 0.3s cubic-bezier(.2,.9,.3,1.2);
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.92) translateY(15px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.timer {
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin: 8px 0 6px;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(135deg, #ffffff, #b7b0ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+#questionText {
+  font-size: 1.45rem;
+  line-height: 1.55;
+  color: #fff;
+  margin: 22px 0 8px;
+  font-weight: 500;
+}
+
+/* ====== ANSWER BUTTONS ====== */
+.answer-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.answer-buttons button {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 16px 40px;
+  border: none;
+  border-radius: 999px;
+  color: #fff;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.answer-buttons button:nth-child(1) {
+  background: linear-gradient(135deg, var(--success), var(--success-2));
+  box-shadow: 0 12px 28px rgba(34, 197, 94, 0.35), inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.answer-buttons button:nth-child(2) {
+  background: linear-gradient(135deg, var(--danger), var(--danger-2));
+  box-shadow: 0 12px 28px rgba(239, 68, 68, 0.35), inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.answer-buttons button:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.08);
+}
+
+.answer-buttons button:nth-child(1):hover {
+  box-shadow: 0 18px 40px rgba(34, 197, 94, 0.5), inset 0 1px 0 rgba(255,255,255,0.35);
+}
+.answer-buttons button:nth-child(2):hover {
+  box-shadow: 0 18px 40px rgba(239, 68, 68, 0.5), inset 0 1px 0 rgba(255,255,255,0.35);
+}
+
+.answer-buttons button:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+/* ====== RESULT ====== */
+.result {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 24px 0 4px;
+  min-height: 1.4em;
+  letter-spacing: 0.02em;
+}
+
+.result.correct {
+  color: var(--success-2);
+  text-shadow: 0 0 24px rgba(74, 222, 128, 0.55);
+}
+.result.wrong {
+  color: var(--danger-2);
+  text-shadow: 0 0 24px rgba(248, 113, 113, 0.55);
+}
+
+/* ====== EXPLANATION ====== */
+.explanation {
+  display: none;
+  margin: 12px auto 4px;
+  padding: 14px 18px;
+  max-width: 560px;
+  font-size: 1rem;
+  line-height: 1.55;
+  text-align: left;
+  color: #e9e6ff;
+  background: linear-gradient(135deg, rgba(124, 92, 255, 0.14), rgba(34, 211, 238, 0.10));
+  border: 1px solid rgba(124, 92, 255, 0.35);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  animation: fadeIn 0.3s ease;
+}
+
+.explanation.show {
+  display: block;
+}
+
+.explanation::before {
+  content: "💡 ";
+  margin-right: 4px;
+}
+
+/* ====== BUTTONS (general) ====== */
+button {
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 11px 18px;
+  margin: 6px 4px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: transform 0.15s ease, background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(124, 92, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Close button (последняя кнопка в попапе) — outlined */
+.popup-content > button:last-child {
+  margin-top: 20px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--text-dim);
+  padding: 11px 32px;
+}
+.popup-content > button:last-child:hover {
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  border-color: rgba(255,255,255,0.4);
+}
+
+/* ====== NEXT BUTTON (modern) ====== */
+.next-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 40px auto 60px;
+  padding: 0 20px;
+}
+
+.next-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 44px;
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  box-shadow:
+    0 12px 32px rgba(124, 92, 255, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(.2,.9,.3,1.2), box-shadow 0.25s ease;
+}
+
+.next-btn::after {
+  content: "→";
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.next-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  transition: left 0.6s ease;
+}
+
+.next-btn:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 20px 45px rgba(124, 92, 255, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.next-btn:hover::after {
+  transform: translateX(6px);
+}
+
+.next-btn:hover::before {
+  left: 100%;
+}
+
+.next-btn:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 1100px) {
+  .list {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 900px) {
+  .list {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .statement {
+    width: 140px;
+    height: 140px;
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .teams { gap: 14px; }
+  .team { min-width: 160px; padding: 16px; }
+  .score { font-size: 2.2rem; }
+
+  .list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .statement {
+    width: 110px;
+    height: 110px;
+    font-size: 1.7rem;
+  }
+
+  .answer-buttons button {
+    padding: 14px 28px;
+    font-size: 0.95rem;
+  }
+
+  #questionText {
+    font-size: 1.15rem;
+  }
+
+  .next-btn {
+    padding: 14px 32px;
+    font-size: 0.95rem;
+  }
+
+  .explanation {
+    font-size: 0.92rem;
+    padding: 12px 14px;
+  }
+}
+</style>
+</head>
+<body>
+
+<h1>Факт или миф</h1>
+
+<!-- SCOREBOARD -->
+<div class="teams">
+  <div class="team">
+    <div id="team1Name" class="team-name">Team 1</div>
+    <div id="score1" class="score">0</div>
+    <div class="score-controls">
+      <button onclick="changeScore(1,1)" aria-label="Плюс один">+</button>
+      <button onclick="changeScore(1,-1)" aria-label="Минус один">−</button>
+    </div>
+  </div>
+  <div class="team">
+    <div id="team2Name" class="team-name">Team 2</div>
+    <div id="score2" class="score">0</div>
+    <div class="score-controls">
+      <button onclick="changeScore(2,1)" aria-label="Плюс один">+</button>
+      <button onclick="changeScore(2,-1)" aria-label="Минус один">−</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUESTIONS GRID -->
+<div class="list" id="list"></div>
+
+<!-- POPUP -->
+<div class="popup" id="popup">
+  <div class="popup-content">
+    <div class="timer" id="timer">30</div>
+    <button onclick="startTimer()">Запустить таймер</button>
+    <p id="questionText"></p>
+    <div class="answer-buttons">
+      <button onclick="checkAnswer(true)">Факт</button>
+      <button onclick="checkAnswer(false)">Миф</button>
+    </div>
+    <div id="result" class="result"></div>
+    <div id="explanation" class="explanation"></div>
+    <button onclick="closePopup()">Закрыть</button>
+  </div>
+</div>
+
+<!-- SOUNDS -->
+<audio id="correctSound" src="audio/correct.mp3"></audio>
+<audio id="wrongSound" src="audio/wrong.mp3"></audio>
+
+<!-- NEXT -->
+<div class="next-wrapper">
+  <a href="round3.html" style="text-decoration:none;">
+    <button class="next-btn">Следующий раунд</button>
+  </a>
+</div>
+
+<script>
+// TEAM NAMES + SCORES from localStorage
+document.getElementById("team1Name").textContent = localStorage.getItem("team1Name") || "Team 1";
+document.getElementById("team2Name").textContent = localStorage.getItem("team2Name") || "Team 2";
+
+let score1 = Number(localStorage.getItem("score1")) || 0;
+let score2 = Number(localStorage.getItem("score2")) || 0;
+document.getElementById("score1").textContent = score1;
+document.getElementById("score2").textContent = score2;
+
+function changeScore(team, delta) {
+  const el = document.getElementById("score" + team);
+  if (team === 1) {
+    score1 += delta;
+    el.textContent = score1;
+    localStorage.setItem("score1", score1);
+  } else {
+    score2 += delta;
+    el.textContent = score2;
+    localStorage.setItem("score2", score2);
+  }
+  el.classList.add("bump");
+  setTimeout(() => el.classList.remove("bump"), 220);
+}
+
+// QUESTIONS
+const data = [
+  {
+    text: "The first year medical college students study Anatomy",
+    answer: false,
+    explanation: "The first year medical college students study basic school subjects"
+  },
+  {
+    text: "В докладе «О борьбе с холерой» (1909) Тарасевич утверждал, что холера распространяется только из за плохой воды, а социальные факторы не важны.",
+    answer: false,
+    explanation: "Наоборот, он выдвигал социальные факторы как причину распространения болезни."
+  },
+  {
+    text: "Все живые организмы состоят из клеток",
+    answer: true,
+    explanation: "Это одно из положений клеточной теории. Исключение — вирусы, но они не считаются полноценными живыми организмами, так как не имеют клеточного строения."
+  },
+  
+  {
+    text: "Иглоукалывание — традиционный метод медицины в Древнем Египте",
+    answer: false,
+    explanation: "Иглоукалывание (акупунктура) — традиционный метод китайской медицины, известный более 2000 лет."
+  },
+  
+  {
+    text: "Н. Д. Зелински а фост директор ал Чентрулуй де контрол асупра серулуй ши вакчинурилор.",
+    answer: false,
+    explanation: ""
+  },
+  
+  {
+    text: "Столетняя война длилась 100 лет",
+    answer: false,
+    explanation: "Столетняя война между Англией и Францией длилась 116 лет — с 1337 по 1453 год."
+  },
+  {
+    text: "Дипломная работа А.П. Чехова в Московском университете «Врачебное дело в России»",
+    answer: true,
+    explanation: ""
+  },
+  {
+    text: "Дистиллированная вода полностью заменяет физиологический раствор при внутривенном введении",
+    answer: false,
+    explanation: "Дистиллированная вода не подходит для самостоятельного внутривенного введения: она отличается по осмотическим свойствам от плазмы крови."
+  },
+  {
+    text: "Митохондрии имеют собственную ДНК",
+    answer: true,
+    explanation: "Митохондрии — полуавтономные органеллы: у них есть собственная кольцевая ДНК (мтДНК), которая наследуется по материнской линии."
+  },
+  {
+    text: "Гражданство – это право человека свободно покидать свою страну.",
+    answer: false,
+    explanation: "Гражданство – это устойчивая правовая связь человека с государством, выражающаяся в совокупности их взаимных прав и обязанностей"
+  },
+  {
+    text: "Самая короткая война в истории длилась 38 минут",
+    answer: true,
+    explanation: " Англо-занзибарская война 1896 года продолжалась около 38 минут (по разным оценкам — 38–45 минут) и считается самой короткой войной в истории."
+  },
+  {
+    text: "Два родных дяди М.А. Булгакова – братья матери Варвары Михайловны оба имели медицинское образование",
+    answer: true,
+    explanation: "Николай Михайлович Покровский – врач-гинеколог. (Прототип профессора Преображенского из «Собачьего сердца»; второй Михаил Михайлович Покровский – врач-терапевт. "
+  },
+  {
+    text: "Ун медик бун доведеште кураж ын ситуацииле дифичиле",
+    answer: true,
+    explanation: ""
+  },
+  
+
+{
+    text: "Глюкоза (C₆H₁₂O₆) является одним из основных источников энергии для клеток организма",
+    answer: true,
+    explanation: "Глюкоза используется клетками для получения энергии"
+  },
+
+ 
+  {
+    text: "Наполеон Бонапарт был очень маленького роста",
+    answer: false,
+    explanation: "Рост Наполеона составлял  168 см., что для его эпохи было выше среднего."
+  },
+  {
+    text: "Все мутации вредны для организма",
+    answer: false,
+    explanation: "Мутации бывают вредными, нейтральными и полезными. Именно полезные мутации являются основой эволюции и естественного отбора."
+  },
+  {
+    text: "Главным научным интересом Тарасевича была исключительно хирургия, он почти не занимался микробиологией и эпидемиологией.",
+    answer: false,
+    explanation: "Его ключевые интересы — иммунология, микробиология, эпидемиология, организация здравоохранения; хирургия не была основным направлением."
+  },
+  {
+    text: "Конституция является основным законом государства",
+    answer: true,
+    explanation: ""
+  },
+  
+  {
+    text: "Холера тесно связана с доступом к чистой воде и санитарией.",
+    answer: true,
+    explanation: "В регионах с плохой водой и антисанитарией риск выше."
+  },
+   {
+    text: "Кислород необходим для аэробного клеточного дыхания, в процессе которого клетки получают энергию",
+    answer: true,
+    explanation: "Кислород участвует в аэробном клеточном дыхании"
+  }
+  
+];
+
+// BUILD GRID
+const list = document.getElementById("list");
+data.forEach((_, i) => {
+  const div = document.createElement("div");
+  div.className = "statement";
+  div.innerHTML = `<span>${i + 1}</span>`;
+  div.onclick = () => openQuestion(div, i);
+  list.appendChild(div);
+});
+
+let current = 0;
+let timeLeft = 30;
+let timerInterval = null;
+
+function openQuestion(el, index) {
+  if (el.classList.contains("used")) return;
+  el.classList.add("used");
+
+  current = index;
+  document.getElementById("questionText").textContent = data[index].text;
+
+  const result = document.getElementById("result");
+  result.textContent = "";
+  result.className = "result";
+
+  const expl = document.getElementById("explanation");
+  expl.textContent = "";
+  expl.classList.remove("show");
+
+  timeLeft = 30;
+  document.getElementById("timer").textContent = timeLeft;
+  clearInterval(timerInterval);
+
+  document.getElementById("popup").style.display = "flex";
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timeLeft = 30;
+  document.getElementById("timer").textContent = timeLeft;
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").textContent = timeLeft;
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      const result = document.getElementById("result");
+      result.textContent = "⏰ Time's up!";
+      result.className = "result wrong";
+      showExplanation();
+    }
+  }, 1000);
+}
+
+function checkAnswer(ans) {
+  clearInterval(timerInterval);
+  const result = document.getElementById("result");
+
+  if (ans === data[current].answer) {
+    result.textContent = "✔ Верно!";
+    result.className = "result correct";
+    document.getElementById("correctSound").play();
+  } else {
+    result.textContent = "✖ Неверно!";
+    result.className = "result wrong";
+    document.getElementById("wrongSound").play();
+  }
+
+  showExplanation();
+}
+
+function showExplanation() {
+  const expl = document.getElementById("explanation");
+  const text = (data[current].explanation || "").trim();
+  if (text) {
+    expl.textContent = text;
+    expl.classList.add("show");
+  } else {
+    expl.textContent = "";
+    expl.classList.remove("show");
+  }
+}
+
+function closePopup() {
+  clearInterval(timerInterval);
+  document.getElementById("popup").style.display = "none";
+}
+</script>
+</body>
+</html>
